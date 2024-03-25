@@ -142,3 +142,6 @@ GitHub.sublime-settings
 *.ipr
 *.iws
 .idea/
+
+# Config files
+config.ini

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Hotel List
+{% endblock %}
+
+
+{% block content %}
+    <h1>Hotel List</h1>
+
+    <form>
+        <label for="city">Ville :</label>
+        <select id="city" name="city">
+            <option value="">Toutes les villes</option>
+            {% for city in cities %}
+                <option value="{{ city.pk }}">{{ city.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <ul id="hotel-list">
+        {% for hotel in hotels %}
+            <li>{{ hotel.name }}</li>
+        {% empty %}
+            <li>No hotels found</li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        // Display hotels of the selected city when the city is changed
+        document.getElementById('city').addEventListener('change', function() {
+            const cityId = this.value;
+            const hotelList = document.getElementById('hotel-list');
+
+            // Remove all hotels from the list
+            hotelList.innerHTML = '';
+
+            // Fetch hotels of the selected city or all hotels if no city is selected
+            let url = '{% url "hotels_by_city" %}';
+            if (cityId) {
+                url += `?city=${cityId}`;
+            }
+            fetch(url)
+                .then(response => response.json())
+                .then(hotels => {
+                    // Add hotels to the list
+                    hotels.forEach(hotel => {
+                        const hotelItem = document.createElement('li');
+                        hotelItem.textContent = `${hotel.code} - ${hotel.name}`;
+                        hotelList.appendChild(hotelItem);
+                    });
+                });
+        });
+
+        // Display all hotels when the page is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const hotelList = document.getElementById('hotel-list');
+
+            // Remove all hotels from the list
+            hotelList.innerHTML = '';
+
+            // Fetch all hotels
+            fetch('{% url "hotels_by_city" %}')
+                .then(response => response.json())
+                .then(hotels => {
+                    // Add hotels to the list
+                    hotels.forEach(hotel => {
+                        const hotelItem = document.createElement('li');
+                        hotelItem.textContent = `${hotel.code} - ${hotel.name} - ${hotel.city.name}`;
+                        hotelList.appendChild(hotelItem);
+                    });
+                });
+        });
+    </script>
+
+{% endblock %}
