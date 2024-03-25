@@ -20,6 +20,11 @@
     </form>
 
     <ul id="hotel-list">
+        {% for hotel in hotels %}
+            <li>{{ hotel.name }}</li>
+        {% empty %}
+            <li>No hotels found</li>
+        {% endfor %}
     </ul>
 
     <script>
