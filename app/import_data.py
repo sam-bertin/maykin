@@ -2,6 +2,7 @@ import csv
 import requests
 import configparser
 from .models import City, Hotel
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 def get_config():
@@ -57,3 +58,13 @@ def import_city_and_hotel_data():
             code=row[1],
             name=row[2]
         )
+
+
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(import_city_and_hotel_data, 'cron', hour=0, minute=0)
+    scheduler.start()
+
+
+if __name__ == '__main__':
+    start_scheduler()
