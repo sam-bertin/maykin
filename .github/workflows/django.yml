@@ -27,6 +27,7 @@ jobs:
         echo "username=${{ secrets.USERNAME }}" >> config.ini
         echo "password=${{ secrets.PASSWORD }}" >> config.ini
         echo " " >> config.ini
+        echo "[urls]" >> config.ini
         echo "city_url=${{ secrets.CITY_URL }}" >> config.ini
         echo "hotel_url=${{ secrets.HOTEL_URL}}" >> config.ini 
     - name: Install Dependencies
