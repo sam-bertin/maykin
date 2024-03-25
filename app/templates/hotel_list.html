@@ -12,7 +12,7 @@
     <form>
         <label for="city">Ville :</label>
         <select id="city" name="city">
-            <option value="">Toutes les villes</option>
+            <option value="">All Cities</option>
             {% for city in cities %}
                 <option value="{{ city.pk }}">{{ city.name }}</option>
             {% endfor %}
