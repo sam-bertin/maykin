@@ -1,5 +1,3 @@
-Sure, here's an example README that you can use as a starting point:
-
 Maykin Django App
 =================
 
