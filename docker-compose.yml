@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=mysecretkey
+      - ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CSV_USERNAME=python-demo
+      - CSV_PASSWORD=claw30_bumps
+      - CSV_CITY_URL=http://rachel.maykinmedia.nl/djangocase/city.csv
+      - CSV_HOTEL_URL=http://rachel.maykinmedia.nl/djangocase/hotel.csv
+
+  scheduler:
+    build: .
+    command: bash -c "./start_scheduler.sh"
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+
