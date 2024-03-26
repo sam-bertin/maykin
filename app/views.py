@@ -54,7 +54,6 @@ class ManagerView(LoginRequiredMixin, TemplateView):
         return context
 
 
-
 class HotelCreateView(LoginRequiredMixin, CreateView):
     model = Hotel
     form_class = HotelForm
@@ -97,3 +96,5 @@ class HotelDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user.is_superuser:
             return True
         return hotel.manager == self.request.user.manager
+
+
