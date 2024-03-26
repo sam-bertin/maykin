@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Hotels in {{ manager.city.name }}</h1>
+    {% if is_superuser %}
+        <h1>All Hotels (You are not assigned as a manager yet)</h1>
+    {% else %}
+        <h1>Hotels in {{ manager.city.name }}</h1>
+    {% endif %}
 
     <table class="table table-striped table-bordered">
         <thead>

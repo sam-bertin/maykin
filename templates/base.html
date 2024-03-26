@@ -16,7 +16,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand font-weight-bold" href="/">{% block navbar_title %}Maykin Assignement{% endblock %}</a>
+    <a class="navbar-brand font-weight-bold" href="/">{% block navbar_title %}Maykin Assignment{% endblock %}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -26,13 +26,36 @@
                 <a class="nav-link" href="/">Home</a>
             </li>
             {% if request.user.is_authenticated and request.user.manager %}
-            <li class="nav-item">
-                <a class="nav-link" href="/manager">Manage my city</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/manager">Manage my city</a>
+                </li>
+            {% endif %}
+            {%  if request.user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">Admin</a>
+                </li>
+                {%  if not request.user.manager %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/manager">Manage all cities</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button class="nav-link btn btn-link" type="submit">Logout</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
             {% endif %}
         </ul>
     </div>
 </nav>
+
 
 
 <div class="container">{% block content %}{% endblock %}</div>

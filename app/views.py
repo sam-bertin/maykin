@@ -40,16 +40,18 @@ class ManagerView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        manager = None
-        try:
-            manager = self.request.user.manager
-            hotels = Hotel.objects.filter(city=manager.city)
-        except Manager.DoesNotExist:
-            return redirect('/')
+        if self.request.user.is_superuser:
+            hotels = Hotel.objects.all()
+            context['is_superuser'] = True
+        else:
+            try:
+                manager = self.request.user.manager
+                hotels = Hotel.objects.filter(city=manager.city)
+                context['manager'] = manager
+            except Manager.DoesNotExist:
+                return redirect('/')
         context['hotels'] = hotels
-        context['manager'] = manager
         return context
-
 
 
 
