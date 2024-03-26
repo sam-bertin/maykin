@@ -1,13 +1,14 @@
-#!/bin/bash
+#!/bin/sh
+echo "Starting scheduler..."
+# Path to the virtualenv
+VIRTUALENV_PATH=/app/venv
 
-# Path of the virtualenv
-VIRTUALENV_PATH="/path/to/your/virtualenv"
+# Activate the virtualenv
+. "$VIRTUALENV_PATH/bin/activate"
 
-# Start the virtualenv
-source "${VIRTUALENV_PATH}/bin/activate"
-
-# Path of the project
-PROJECT_DIR="/path/to/your/project"
+# Path to the project
+PROJECT_DIR=/app
 
 # Start the scheduler
-cd "${PROJECT_DIR}" && python manage.py start_scheduler
+cd "$PROJECT_DIR"
+python manage.py start_scheduler

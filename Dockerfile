@@ -6,24 +6,15 @@ WORKDIR /app
 
 COPY requirements.txt /app/
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 -m venv venv
+
+RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
+RUN chmod +x /app/start_scheduler.sh
+
 EXPOSE 8000
 
-# Define environment variables
-ENV DEBUG=1
-ENV SECRET_KEY=mysecretkey
-ENV ALLOWED_HOSTS=['*']
-ENV CSV_USERNAME=$CSV_USERNAME
-ENV CSV_PASSWORD=$CSV_PASSWORD
-ENV CSV_CITY_URL=$CSV_CITY_URL
-ENV CSV_HOTEL_URL=$CSV_HOTEL_URL
-
-RUN python manage.py createsuperuser --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL --password $DJANGO_SUPERUSER_PASSWORD
-
-CMD bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-
-
+CMD bash -c "source venv/bin/activate && python manage.py migrate && python manage.py createsuperuser --noinput && python manage.py runserver 0.0.0.0:8000 && ./start_scheduler.sh"
 
