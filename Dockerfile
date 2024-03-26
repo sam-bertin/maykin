@@ -16,10 +16,11 @@ EXPOSE 8000
 ENV DEBUG=1
 ENV SECRET_KEY=mysecretkey
 ENV ALLOWED_HOSTS=['*']
-ENV CSV_USERNAME=<username>
-ENV CSV_PASSWORD=<password>
-ENV CSV_CITY_URL=<city_url>
-ENV CSV_HOTEL_URL=<hotel_url>
+ENV CSV_USERNAME=$CSV_USERNAME
+ENV CSV_PASSWORD=$CSV_PASSWORD
+ENV CSV_CITY_URL=$CSV_CITY_URL
+ENV CSV_HOTEL_URL=$CSV_HOTEL_URL
+
 
 # Execute the command to start the server
 CMD bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
