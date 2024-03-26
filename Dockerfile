@@ -21,8 +21,8 @@ ENV CSV_PASSWORD=$CSV_PASSWORD
 ENV CSV_CITY_URL=$CSV_CITY_URL
 ENV CSV_HOTEL_URL=$CSV_HOTEL_URL
 
+RUN python manage.py createsuperuser --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL --password $DJANGO_SUPERUSER_PASSWORD
 
-# Execute the command to start the server
 CMD bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
 
