@@ -33,5 +33,8 @@ jobs:
             -e CSV_PASSWORD=${{ secrets.CSV_PASSWORD }} \
             -e CSV_CITY_URL=${{ secrets.CSV_CITY_URL }} \
             -e CSV_HOTEL_URL=${{ secrets.CSV_HOTEL_URL }} \
+            -e DJANGO_SUPERUSER_USERNAME=testuser \
+            -e DJANGO_SUPERUSER_PASSWORD=testpass \
+            -e DJANGO_SUPERUSER_EMAIL=aaa@aaa.com \
             maykin-django-app \
             python manage.py test
