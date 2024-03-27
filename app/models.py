@@ -1,4 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
+
 
 # Create your models here.
 class City(models.Model):
@@ -8,10 +10,19 @@ class City(models.Model):
     def __str__(self):
         return self.name
 
+
 class Hotel(models.Model):
-    city = models.ForeignKey(City, on_delete=models.CASCADE) # Delete all hotels in a city if city is deleted
+    city = models.ForeignKey(City, on_delete=models.CASCADE)  # Delete all hotels in a city if city is deleted
     code = models.CharField(max_length=5)
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+
+
+class Manager(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username

@@ -1,29 +1,22 @@
 import csv
+import os
 import requests
-import configparser
 from .models import City, Hotel
-
-
-def get_config():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    return {section: dict(config.items(section)) for section in config.sections()}
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 def get_auth_info():
-    config = get_config()
     auth_info = {
-        'username': config['authentication']['username'],
-        'password': config['authentication']['password']
+        'username': os.environ.get('CSV_USERNAME'),
+        'password': os.environ.get('CSV_PASSWORD')
     }
     return auth_info
 
 
 def import_city_and_hotel_data():
     # URL infos
-    config = get_config()
-    city_url = config['urls']['city_url']
-    hotel_url = config['urls']['hotel_url']
+    city_url = os.environ.get('CSV_CITY_URL')
+    hotel_url = os.environ.get('CSV_HOTEL_URL')
 
     # Gather the authentication info
     auth_info = get_auth_info()
@@ -57,3 +50,13 @@ def import_city_and_hotel_data():
             code=row[1],
             name=row[2]
         )
+
+
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(import_city_and_hotel_data, 'cron', hour=0, minute=0)
+    scheduler.start()
+
+
+if __name__ == '__main__':
+    start_scheduler()

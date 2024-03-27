@@ -1,0 +1,40 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.12]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build Docker image
+        run: docker build -t maykin-django-app .
+      - name: Run tests with Docker
+        run: |
+          docker run --rm \
+            -e DEBUG=1 \
+            -e SECRET_KEY=mysecretkey \
+            -e ALLOWED_HOSTS='["*"]' \
+            -e CSV_USERNAME=${{ secrets.CSV_USERNAME }} \
+            -e CSV_PASSWORD=${{ secrets.CSV_PASSWORD }} \
+            -e CSV_CITY_URL=${{ secrets.CSV_CITY_URL }} \
+            -e CSV_HOTEL_URL=${{ secrets.CSV_HOTEL_URL }} \
+            -e DJANGO_SUPERUSER_USERNAME=testuser \
+            -e DJANGO_SUPERUSER_PASSWORD=testpass \
+            -e DJANGO_SUPERUSER_EMAIL=aaa@aaa.com \
+            maykin-django-app \
+            sh -c "pip install -r requirements.txt && python manage.py test"
