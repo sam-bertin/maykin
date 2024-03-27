@@ -12,7 +12,8 @@ from .forms import HotelForm
 
 # Create your views here.
 def hotel_list(request):
-    # TODO : Replace import with cron job
+    # TODO : Remove the following line if the data is imported via a cron job as it would already be imported
+    # This is not optimal as the data will be queried every time the view is accessed
     import_city_and_hotel_data()
     cities = City.objects.all()
     hotels = Hotel.objects.all()
