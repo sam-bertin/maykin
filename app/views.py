@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, DeleteView, CreateView
 from .models import City, Hotel
 from .import_data import import_city_and_hotel_data
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
 from .models import Hotel, Manager
@@ -97,5 +97,18 @@ class HotelDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user.is_superuser:
             return True
         return hotel.manager == self.request.user.manager
+    
+
+def hotel_detail(request, code_hotel):
+    hotel = get_object_or_404(Hotel, code=code_hotel)
+    rooms = hotel.room_set.all()
+    return render(request, 'hotel_detail.html', {'hotel': hotel, 'rooms': rooms})
+
+
+
+
+
+
+    
 
 

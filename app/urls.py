@@ -11,6 +11,7 @@ urlpatterns = [
     path('hotels/create/', HotelCreateView.as_view(), name='hotel_create'),
     path('hotels/<int:pk>/update/', HotelUpdateView.as_view(), name='hotel_update'),
     path('hotels/<int:pk>/delete/', HotelDeleteView.as_view(), name='hotel_delete'),
+    path('hotels/<str:code_hotel>/', views.hotel_detail, name='hotel_detail'),
     path('manager/', login_required(ManagerView.as_view()), name='manager_view'),
     path('accounts/login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),

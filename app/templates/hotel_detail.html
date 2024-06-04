@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="d-flex mt-4">
+  <div class="hotel-info-and-rooms mr-4">
+    <div class="card hotel-info mb-2 p-3" style="width: 50vw">
+      <h1>{{ hotel.name }}</h1>
+      <p>Description: {{ hotel.description}}</p>
+      <p>Address details: {{ hotel.address }}</p>
+    </div>
+    <div class="hotel-rooms d-flex">
+      {% for room in rooms %}
+      <div class="card p-3" style="width: 18rem">
+        <img src="{{room.image}}" class="card-img-top" alt="Room thumbnail" />
+        <div class="card-body">
+          <h5 class="card-title">{{ room.title }}</h5>
+          <p class="card-text">{{ room.description }}</p>
+          <a href="#" class="btn btn-primary stretched-link mb-2">Book Now</a>
+          <div class="card-footer">Price per night: {{ room.price }} EUR</div>
+        </div>
+      </div>
+      {% empty %}
+      <div>No rooms available</div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="card hotel-cta" style="width: 18rem">
+    <img src="{{hotel.image}}" class="card-img-top" alt="Hotel thumbnail" />
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">Available from</p>
+      <a href="#" class="btn btn-primary">Order now !</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

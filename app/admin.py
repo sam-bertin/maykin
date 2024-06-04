@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import City, Hotel, Manager
+from .models import City, Hotel, Manager, Room
 
 
 # Register your models here.
@@ -29,7 +29,13 @@ class ManagerAdmin(admin.ModelAdmin):
     list_display = ('user', 'city')
     search_fields = ('user__username', 'city__name')
 
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('title', 'hotel', 'price')
+    list_filter = ('hotel',)
+    search_fields = ('title', 'hotel__name')
+
 
 admin.site.register(City, CityAdmin)
 admin.site.register(Hotel, HotelAdmin)
 admin.site.register(Manager, ManagerAdmin)
+admin.site.register(Room, RoomAdmin)

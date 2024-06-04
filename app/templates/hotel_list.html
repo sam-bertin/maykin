@@ -1,118 +1,113 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "base.html" %} {% load static %} {% block title %} Hotel List
+{%endblock %} {% block content %}
+<h1>Hotel List</h1>
 
-{% block title %}
-    Hotel List
-{% endblock %}
+<form>
+  <label for="city">Ville :</label>
+  <select id="city" name="city">
+    <option value="">All Cities</option>
+    {% for city in cities %}
+    <option value="{{ city.pk }}">{{ city.name }}</option>
+    {% endfor %}
+  </select>
+</form>
 
-{% block content %}
-    <h1>Hotel List</h1>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>City</th>
+    </tr>
+  </thead>
+  <tbody id="hotel-list">
+    {% for hotel in hotels %}
+    <tr>
+      <td>{{ hotel.code }}</td>
+      <td class="streched-link">
+        <a href="{% url 'hotel_detail' hotel.code %}">{{ hotel.name }}</a>
+      </td>
+      <td>{{ hotel.city.name }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">No hotels found</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-    <form>
-        <label for="city">Ville :</label>
-        <select id="city" name="city">
-            <option value="">All Cities</option>
-            {% for city in cities %}
-                <option value="{{ city.pk }}">{{ city.name }}</option>
-            {% endfor %}
-        </select>
-    </form>
+<script>
+  // Display hotels of the selected city when the city is changed
+  document.getElementById("city").addEventListener("change", function () {
+    const cityId = this.value;
+    const hotelList = document.getElementById("hotel-list");
 
-    <table class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>City</th>
-        </tr>
-        </thead>
-        <tbody id="hotel-list">
-        {% for hotel in hotels %}
-            <tr>
-                <td>{{ hotel.code }}</td>
-                <td>{{ hotel.name }}</td>
-                <td>{{ hotel.city.name }}</td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="3">No hotels found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    // Remove all hotels from the table
+    hotelList.innerHTML = "";
 
-    <script>
-        // Display hotels of the selected city when the city is changed
-        document.getElementById('city').addEventListener('change', function() {
-            const cityId = this.value;
-            const hotelList = document.getElementById('hotel-list');
-
-            // Remove all hotels from the table
-            hotelList.innerHTML = '';
-
-            // Fetch hotels of the selected city or all hotels if no city is selected
-            let url = '{% url "hotels_by_city" %}';
-            if (cityId) {
-                url += `?city=${cityId}`;
-            }
-            fetch(url)
-                .then(response => response.json())
-                .then(hotels => {
-                    // Add hotels to the table
-                    hotels.forEach(hotel => {
-                        const hotelRow = document.createElement('tr');
-                        hotelRow.innerHTML = `
-                        <td>${hotel.code}</td>
-                        <td>${hotel.name}</td>
-                        <td>${hotel.city.name}</td>
-                    `;
-                        hotelList.appendChild(hotelRow);
-                    });
-
-                    // Display "No hotels found" message if there are no hotels
-                    if (hotels.length === 0) {
-                        const noHotelsRow = document.createElement('tr');
-                        noHotelsRow.innerHTML = `
-                        <td colspan="3">No hotels found</td>
-                    `;
-                        hotelList.appendChild(noHotelsRow);
-                    }
-                });
+    // Fetch hotels of the selected city or all hotels if no city is selected
+    let url = '{% url "hotels_by_city" %}';
+    if (cityId) {
+      url += `?city=${cityId}`;
+    }
+    fetch(url)
+      .then((response) => response.json())
+      .then((hotels) => {
+        // Add hotels to the table
+        hotels.forEach((hotel) => {
+          const hotelRow = document.createElement("tr");
+          hotelRow.innerHTML = `
+                <td>${hotel.code}</td>
+                <td class="streched-link"><a href="hotels/${hotel.code}">${hotel.name}</a></td>
+                <td>${hotel.city.name}</td>
+            `;
+          hotelList.appendChild(hotelRow);
         });
 
-        // Display all hotels when the page is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            const hotelList = document.getElementById('hotel-list');
-
-            // Remove all hotels from the table
-            hotelList.innerHTML = '';
-
-            // Fetch all hotels
-            fetch('{% url "hotels_by_city" %}')
-                .then(response => response.json())
-                .then(hotels => {
-                    // Add hotels to the table
-                    hotels.forEach(hotel => {
-                        const hotelRow = document.createElement('tr');
-                        hotelRow.innerHTML = `
-                        <td>${hotel.code}</td>
-                        <td>${hotel.name}</td>
-                        <td>${hotel.city.name}</td>
-                    `;
-                        hotelList.appendChild(hotelRow);
-                    });
-
-                    // Display "No hotels found" message if there are no hotels
-                    if (hotels.length === 0) {
-                        const noHotelsRow = document.createElement('tr');
-                        noHotelsRow.innerHTML = `
+        // Display "No hotels found" message if there are no hotels
+        if (hotels.length === 0) {
+          const noHotelsRow = document.createElement("tr");
+          noHotelsRow.innerHTML = `
                         <td colspan="3">No hotels found</td>
                     `;
-                        hotelList.appendChild(noHotelsRow);
-                    }
-                });
-        });
-    </script>
+          hotelList.appendChild(noHotelsRow);
+        }
+      });
+  });
 
+  // Display all hotels when the page is loaded
+  document.addEventListener("DOMContentLoaded", function () {
+    const hotelList = document.getElementById("hotel-list");
+
+    // Remove all hotels from the table
+    hotelList.innerHTML = "";
+
+    // Fetch all hotels
+    fetch('{% url "hotels_by_city" %}')
+      .then((response) => response.json())
+      .then((hotels) => {
+        // Add hotels to the table
+        hotels.forEach((hotel) => {
+          const hotelRow = document.createElement("tr");
+          hotelRow.innerHTML = `
+                <td>${hotel.code}</td>
+                <td class="streched-link"><a href="hotels/${hotel.code}">${hotel.name}</a></td>
+                <td>${hotel.city.name}</td>
+            `;
+          hotelList.appendChild(hotelRow);
+        });
+
+        // Display "No hotels found" message if there are no hotels
+        if (hotels.length === 0) {
+          const noHotelsRow = document.createElement("tr");
+          noHotelsRow.innerHTML = `
+                        <td colspan="3">No hotels found</td>
+                    `;
+          hotelList.appendChild(noHotelsRow);
+        }
+      });
+  });
+</script>
 
 {% endblock %}
